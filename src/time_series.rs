@@ -248,7 +248,7 @@ impl<T: DeserializeOwned> TimeSeries<T> {
 mod tests {
     use super::*;
 
-    const NAMESPACE: &str = "redis-ts";
+    const NAMESPACE: &str = "redis-zset-ts";
 
     #[test]
     fn test_time_value() {

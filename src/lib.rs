@@ -1,4 +1,4 @@
-// redis-ts/src/lib.rs
+// redis-zset-ts/src/lib.rs
 //
 // Copyright (c) 2024, Frank Pagliughi <fpagliughi@mindspring.com>
 // All Rights Reserved

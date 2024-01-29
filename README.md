@@ -1,6 +1,4 @@
-# redis-zset-ts
-
-<p align="center"><b>A library for using Redis as a simple Time-Series Database</b></p>
+# A library for using Redis as a simple Time-Series Database
 
 This library allows you to use a plain vanilla installation of Redis to hold simple time-series data. This is not meant to replace a time-series database; if you have one available, use it. Similarly, Redis has one or more plugins that allow you to store time-series data in a more efficient manner. If that is available, it is likely prefereble to using this method of storing data.
 
@@ -10,7 +8,7 @@ Redis is primarily a key/value store, but has a number of additional features fo
 
 In doing this the "key" of the sorted set becomes the data being tracked, and the "score" is the time index. The main caveat of doing this is that the key of the sorted set (and thus our data) must be unique. To insure uniqueness, the data can be combined with the timestamp in a tuple or array before being sent to Redis. This creates a redundant timestamp for each point, but actually simplifies data retrieval, because the index does not need to be recombined to get the time/data pair. The values retrieved from Redis have all the time/data information.
 
-# Database Connection
+## Database Connection
 
 Using this library, each data set is represented by the Rust `TimeSeries<T>` generic type. This contains a connection to the database that can be used to add or query for data for a single time series.
 
@@ -33,7 +31,7 @@ pub fn with_host(host: &str, namespace: &str, name: &str) -> Result<Self> { ... 
 pub fn with_uri(uri: &str, namespace: &str, name: &str) -> Result<Self> { ... }
 ```
 
-# The Time Series
+## The Time Series
 
 Within the application that uses this library, data points can be represented a `TimeValue<T>`:
 
@@ -83,7 +81,7 @@ The data is put into Redis using MsgPack to combine the time and value into a tu
 rmps::encode::to_vec_named(&(v.timestamp, &v.value))
 ```
 
-# Data Insertion
+## Data Insertion
 
 Values can be inserted into the Redis database using individual points like:
 
@@ -108,40 +106,47 @@ series.add_value(tv);
 Multiple values can be added efficiently all at once:
 
 ```Rust
-let vals: Vec<_> = (0..5).into_iter().map(|_| TimeValue::new(read_some_values()).collect();
+let vals: Vec<_> = (0..5)
+    .into_iter()
+    .map(|_| TimeValue::new(read_some_values())
+    .collect();
+
 series.add_multiple(&vals);
 ```
 
-# Data Retrieval
+## Data Retrieval
 
 Data can be queried using a time range. The range can be provided as floating-point timestamps or with `SystemTime` values. Using timestamps makes it convenient to do ranges of seconds with simple subtraction:
 
 ```Rust
+// Retrieve the last minute of data
 let now = timestamp();
-let vals = series.get_range(now-60.0, now).unwrap();   // Retrieve the last minute of data
+let vals = series.get_range(now-60.0, now).unwrap();
 ```
 
 The time points can use strings like "-inf" and "+inf" which are special to Redis:
 
 ```Rust
-let vals = series.get_range_any("-inf", "+inf").unwrap();   // Gets the whole time series (all points)
+// Gets the whole time series (all points)
+let vals = series.get_range_any("-inf", "+inf").unwrap();
 ```
 
-# Removing Data
+## Removing Data
 
 The oldest data can be easily purged, using a time point to erase any values prior to it:
 
 ```Rust
+// Erase any data older than 10min
 let ts = timestamp();
-series.purge(ts - 600.0);    // Erase any data older than 10min
+series.purge(ts - 600.0);
 ```
 
 This can be done periodically or any time adding new points to keep a moving window of data in Redis, like the last minute, ten minutes, hour, day, etc.
 
 ```Rust
 let ts = timestamp();
-series.add(ts, read_some_value());  // Insert a new value, then
-series.purge(ts - 600.0);    // erase any data older than 10min
+series.add(ts, read_some_value()); // Insert a new value, then
+series.purge(ts - 600.0);          // erase any data older than 10min
 ```
 
 The _entire_ series can be removed from Redis with a single call:
