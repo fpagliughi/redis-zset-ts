@@ -1,0 +1,10 @@
+# .rustfmt.toml
+#
+# Code format definitions for Eclipse Paho MQTT Rust library.
+#
+
+edition = "2021"
+
+# At last check, this is still unstable, requiring +nightly
+control_brace_style = "ClosingNextLine"
+

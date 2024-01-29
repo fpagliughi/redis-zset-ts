@@ -1,0 +1,19 @@
+[package]
+name = "redis-zset-ts"
+version = "0.1.0"
+authors = ["Frank Pagliughi <fpagliughi@mindspring.com>"]
+edition = "2021"
+rust-version = "1.63"
+repository = "https://github.com/fpagliughi/redis-zset-ts"
+license = "MIT"
+keywords = ["redis", "time-series"]
+description = """
+Simple Redis Timeseries using Sorted 'Z' Sets
+"""
+
+[dependencies]
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+rmp-serde = "1.1"
+redis = "0.24"
+
