@@ -1,4 +1,4 @@
-# A library for using Redis as a simple Time-Series Database
+# Redis as a Simple Time-Series Database
 
 This library allows you to use a plain vanilla installation of Redis to hold simple time-series data. This is not meant to replace a time-series database; if you have one available, use it. Similarly, Redis has one or more plugins that allow you to store time-series data in a more efficient manner. If that is available, it is likely prefereble to using this method of storing data.
 
