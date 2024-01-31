@@ -25,39 +25,16 @@
 )]
 
 use rmp_serde as rmps;
-use std::{
-    io,
-    time::{SystemTime, UNIX_EPOCH},
-};
-use thiserror::Error;
 
 mod time_series;
-pub use time_series::TimeSeries;
-
-/// Converts the system time to a 64-bit floating point value which
-/// represents the number of seconds, including fraction, since the Unix
-/// Epoch. This has microsecond resolution.
-pub fn as_timestamp(st: SystemTime) -> f64 {
-    let ts = st
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards")
-        .as_secs_f64();
-    (ts * 1.0e6).round() / 1.0e6
-}
-
-/// Gets the current time as a 64-bit floating point value which represents
-/// the number of seconds, including fraction, since the Unix Epoch.
-/// This has microsecond resolution.
-pub fn timestamp() -> f64 {
-    as_timestamp(SystemTime::now())
-}
+pub use time_series::{TimeSeries, Timestamp, TimeValue};
 
 /// Errors for this library
-#[derive(Error, Debug)]
+#[derive(thiserror::Error, Debug)]
 pub enum Error {
     /// Low-level I/O error
     #[error(transparent)]
-    Io(#[from] io::Error),
+    Io(#[from] std::io::Error),
     /// MsgPack serialization error
     #[error(transparent)]
     MsgPackEncode(#[from] rmps::encode::Error),
